@@ -1,10 +1,452 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>GitHub Actions Deployment</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>William Mucha | DevOps Engineer</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0A192F;
+    color: #CCD6F6;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    min-height: 100vh;
+  }
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 4rem;
+    border-bottom: 1px solid rgba(100,255,218,0.1);
+    position: sticky;
+    top: 0;
+    background: #0A192F;
+    z-index: 100;
+  }
+  .logo img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #00B4D8;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { color: #8892B0; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+  .nav-links a:hover { color: #00B4D8; }
+  .hero-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+  #particles-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    padding: 6rem 4rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-text { flex: 1; }
+  .hero-photo { flex-shrink: 0; }
+  .hero-photo img {
+    width: 320px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+  .hero-sub { color: #00B4D8; font-size: 1rem; margin-bottom: 1rem; letter-spacing: 1px; }
+  .hero h1 { font-size: 3.5rem; font-weight: 700; color: #CCD6F6; line-height: 1.1; margin-bottom: 0.5rem; }
+  .hero h2 { font-size: 2rem; font-weight: 700; color: #8892B0; margin-bottom: 1.5rem; }
+  .hero p { font-size: 1rem; color: #8892B0; max-width: 540px; line-height: 1.7; margin-bottom: 2.5rem; }
+  .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn {
+    padding: 0.9rem 2rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+    display: inline-block;
+  }
+  .btn-primary { background: transparent; border: 1px solid #00B4D8; color: #00B4D8; }
+  .btn-primary:hover { background: rgba(0,180,216,0.1); }
+  .btn-secondary { background: transparent; border: 1px solid #8892B0; color: #8892B0; }
+  .btn-secondary:hover { background: rgba(136,146,176,0.1); }
+  section { padding: 5rem 4rem; max-width: 1000px; margin: 0 auto; }
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #CCD6F6;
+    margin-bottom: 2.5rem;
+  }
+  .section-title span { color: #00B4D8; font-size: 1.1rem; }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(100,255,218,0.1);
+  }
+  .about-text { color: #8892B0; font-size: 1rem; line-height: 1.8; max-width: 700px; }
+  .about-text p { margin-bottom: 1rem; }
+  .about-highlights { display: flex; gap: 2rem; margin-top: 2rem; flex-wrap: wrap; }
+  .highlight {
+    background: #112240;
+    border: 1px solid rgba(0,180,216,0.2);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    min-width: 160px;
+  }
+  .highlight-number { color: #00B4D8; font-size: 1.8rem; font-weight: 700; }
+  .highlight-label { color: #8892B0; font-size: 0.8rem; margin-top: 0.25rem; }
+  .skills-categories { display: flex; flex-direction: column; gap: 2rem; }
+  .skill-category h3 { color: #CCD6F6; font-size: 0.9rem; margin-bottom: 0.75rem; letter-spacing: 1px; text-transform: uppercase; }
+  .skills-grid { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .skill-tag {
+    background: rgba(0,180,216,0.1);
+    border: 1px solid rgba(0,180,216,0.3);
+    color: #00B4D8;
+    padding: 0.4rem 0.9rem;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    font-family: monospace;
+  }
+  .experience-list { display: flex; flex-direction: column; gap: 2rem; }
+  .experience-item {
+    background: #112240;
+    border: 1px solid rgba(100,255,218,0.1);
+    border-radius: 8px;
+    padding: 1.75rem;
+    border-left: 3px solid #00B4D8;
+  }
+  .exp-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem; }
+  .exp-title { color: #CCD6F6; font-size: 1rem; font-weight: 600; }
+  .exp-date { color: #00B4D8; font-size: 0.82rem; font-family: monospace; }
+  .exp-company { color: #8892B0; font-size: 0.9rem; margin-bottom: 1rem; }
+  .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .exp-bullets li { color: #8892B0; font-size: 0.875rem; line-height: 1.6; padding-left: 1.25rem; position: relative; }
+  .exp-bullets li::before { content: '▹'; color: #00B4D8; position: absolute; left: 0; }
+  .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .project-card {
+    background: #112240;
+    border: 1px solid rgba(100,255,218,0.1);
+    border-radius: 8px;
+    padding: 1.75rem;
+    transition: transform 0.2s, border-color 0.2s;
+    text-decoration: none;
+    display: block;
+  }
+  .project-card:hover { transform: translateY(-4px); border-color: #00B4D8; }
+  .project-card h3 { color: #CCD6F6; font-size: 1rem; margin-bottom: 0.75rem; }
+  .project-card p { color: #8892B0; font-size: 0.875rem; line-height: 1.6; margin-bottom: 1rem; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .project-tag { color: #00B4D8; font-size: 0.75rem; font-family: monospace; }
+  .contact-content { text-align: center; padding: 3rem 0; }
+  .contact-content p { color: #8892B0; max-width: 500px; margin: 0 auto 2rem; line-height: 1.7; }
+  .social-links { display: flex; justify-content: center; gap: 2rem; margin-top: 3rem; flex-wrap: wrap; }
+  .social-links a { color: #8892B0; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+  .social-links a:hover { color: #00B4D8; }
+  footer { text-align: center; padding: 2rem; color: #8892B0; font-size: 0.8rem; border-top: 1px solid rgba(100,255,218,0.1); }
+  @media (max-width: 768px) {
+    nav { padding: 1rem 2rem; }
+    .hero { flex-direction: column; padding: 4rem 2rem; gap: 2rem; text-align: center; }
+    .hero h1 { font-size: 2.5rem; }
+    .hero h2 { font-size: 1.5rem; }
+    .btn-group { justify-content: center; }
+    section { padding: 3rem 2rem; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .hero-photo img { width: 240px; }
+    .about-highlights { justify-content: center; }
+  }
+</style>
 </head>
 <body>
-    <h1>Hello, GitHub Actions!</h1>
+
+<nav>
+  <div class="logo">
+    <img src="profile.png" alt="William Mucha" />
+  </div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="hero-wrapper">
+  <canvas id="particles-canvas"></canvas>
+  <div class="hero">
+    <div class="hero-text">
+      <p class="hero-sub">Hi, my name is</p>
+      <h1>William Mucha.</h1>
+      <h2>I build cloud infrastructure.</h2>
+      <p>DevOps & Cloud Engineer with 3+ years of experience deploying and maintaining production infrastructure for high-traffic applications. Based in Toronto, Canada — available for remote roles globally.</p>
+      <div class="btn-group">
+        <a href="mailto:contact@williammucha.com" class="btn btn-primary">Get in touch</a>
+        <a href="https://github.com/WilliamFly/devops-projects" class="btn btn-secondary">View projects</a>
+      </div>
+    </div>
+    <div class="hero-photo">
+      <img src="head.png" alt="William Mucha" />
+    </div>
+  </div>
+</div>
+
+<section id="about">
+  <h2 class="section-title"><span>01.</span> About</h2>
+  <div class="about-text">
+    <p>I'm a DevOps & Cloud Engineer with a full-stack engineering background, having personally architected, deployed, and maintained systems serving 1M+ monthly users in remote-first, globally distributed environments.</p>
+    <p>I operate with an ownership mindset — comfortable as the sole technical decision-maker or as a collaborative contributor within larger engineering teams. My academic background in GIS, Mathematics, and Computer Science from the University of Toronto gives me an analytical edge that informs how I approach infrastructure problems.</p>
+    <p>I'm currently studying for the AWS Certified Solutions Architect — Associate certification and actively building my DevOps project portfolio.</p>
+    <div class="about-highlights">
+      <div class="highlight">
+        <div class="highlight-number">3+</div>
+        <div class="highlight-label">Years Experience</div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-number">1M+</div>
+        <div class="highlight-label">Monthly Users Served</div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-number">3</div>
+        <div class="highlight-label">Continents Deployed</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <h2 class="section-title"><span>02.</span> Skills</h2>
+  <div class="skills-categories">
+    <div class="skill-category">
+      <h3>Cloud & Infrastructure</h3>
+      <div class="skills-grid">
+        <span class="skill-tag">AWS EC2</span>
+        <span class="skill-tag">AWS Route 53</span>
+        <span class="skill-tag">AWS S3</span>
+        <span class="skill-tag">CloudFront</span>
+        <span class="skill-tag">Google Cloud (GCP)</span>
+        <span class="skill-tag">Linux (Ubuntu / Debian)</span>
+        <span class="skill-tag">NGINX</span>
+        <span class="skill-tag">Systemd</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <h3>Containers & CI/CD</h3>
+      <div class="skills-grid">
+        <span class="skill-tag">Docker</span>
+        <span class="skill-tag">Docker Compose</span>
+        <span class="skill-tag">Kubernetes</span>
+        <span class="skill-tag">GitHub Actions</span>
+        <span class="skill-tag">CI/CD Pipelines</span>
+        <span class="skill-tag">Git</span>
+        <span class="skill-tag">rsync</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <h3>Automation & Scripting</h3>
+      <div class="skills-grid">
+        <span class="skill-tag">Bash</span>
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Terraform</span>
+        <span class="skill-tag">n8n</span>
+        <span class="skill-tag">Make.com</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <h3>Backend & APIs</h3>
+      <div class="skills-grid">
+        <span class="skill-tag">Node.js & Express</span>
+        <span class="skill-tag">Flask</span>
+        <span class="skill-tag">Redis</span>
+        <span class="skill-tag">MongoDB</span>
+        <span class="skill-tag">MySQL</span>
+        <span class="skill-tag">RESTful APIs</span>
+        <span class="skill-tag">Retell AI</span>
+        <span class="skill-tag">Vapi</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <h3>Monitoring & Security</h3>
+      <div class="skills-grid">
+        <span class="skill-tag">Netdata</span>
+        <span class="skill-tag">Sentry</span>
+        <span class="skill-tag">SSL / TLS (Let's Encrypt / ACM)</span>
+        <span class="skill-tag">fail2ban</span>
+        <span class="skill-tag">OWASP API Security</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <h2 class="section-title"><span>03.</span> Experience</h2>
+  <div class="experience-list">
+
+    <div class="experience-item">
+      <div class="exp-header">
+        <div class="exp-title">Co-Founder / CTO</div>
+        <div class="exp-date">Apr 2025 — Jan 2026</div>
+      </div>
+      <div class="exp-company">Supreme AI — Remote</div>
+      <ul class="exp-bullets">
+        <li>Owned all technical and infrastructure decisions for an early-stage AI SaaS product as a one-person engineering team.</li>
+        <li>Designed and maintained AWS-based infrastructure including EC2, S3, and Route 53 for development, staging, and production environments.</li>
+        <li>Architected and delivered AI voice agent systems integrating with Retell and Vapi, building automated telephony workflows for client-facing applications.</li>
+        <li>Implemented workflow automation using GoHighLevel, n8n, and Make.com, replacing manual business processes with event-driven pipelines.</li>
+        <li>Managed NGINX configuration for reverse proxying, SSL termination, and routing across services.</li>
+      </ul>
+    </div>
+
+    <div class="experience-item">
+      <div class="exp-header">
+        <div class="exp-title">Full-Stack Developer — DevOps & Infrastructure Focus</div>
+        <div class="exp-date">Jul 2023 — Apr 2025</div>
+      </div>
+      <div class="exp-company">BetterClipz / CoachDiff / TrackDiff — Remote</div>
+      <ul class="exp-bullets">
+        <li>Primary infrastructure engineer across a portfolio of sports analytics platforms, owning all cloud operations for production systems serving 1M+ monthly visitors.</li>
+        <li>Architected a multi-region AWS deployment across 3 continents using Route 53 latency-based routing and CloudFront, achieving p95 response times under 150ms.</li>
+        <li>Deployed and operated Dockerized multi-service applications on AWS EC2, managing container orchestration and production system health simultaneously across platforms.</li>
+        <li>Implemented a layered cybersecurity posture combining NGINX SSL termination, TLS automation (Let's Encrypt / ACM), and OWASP-aligned API input validation across 3+ customer-facing dashboards.</li>
+        <li>Built CI/CD-friendly deployment workflows using GitHub and Docker, enabling consistent weekly releases with minimal downtime.</li>
+        <li>Automated backend operations using Bash and Python, replacing workflows that previously required full-time manual effort.</li>
+      </ul>
+    </div>
+
+    <div class="experience-item">
+      <div class="exp-header">
+        <div class="exp-title">Full-Stack Developer</div>
+        <div class="exp-date">Feb 2022 — Jul 2023</div>
+      </div>
+      <div class="exp-company">Devopie Inc. — Remote</div>
+      <ul class="exp-bullets">
+        <li>Designed and maintained a 4-stage Git-based CI/CD pipeline covering feature branches, pull requests, staging validation, and weekly production releases.</li>
+        <li>Reduced mean time to detection for production errors by 60% by integrating Sentry, cutting average triage time from 30 minutes to under 10 minutes per incident.</li>
+        <li>Improved database query performance by 90% by auditing and indexing critical fields in MongoDB & MySQL, cutting dashboard load time from 10 seconds to under 1 second.</li>
+        <li>Evaluated Kubernetes as a container orchestration layer, standing up a staging cluster and identifying 5 environment-parity gaps that informed the production migration roadmap.</li>
+        <li>Led and delivered third-party integrations with Moneris, Shopify, and multiple Canadian financial institutions end-to-end.</li>
+        <li>Mentored junior developers and stepped into technical leadership during team transitions.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section id="projects">
+  <h2 class="section-title"><span>04.</span> Projects</h2>
+  <div class="projects-grid">
+    <a href="https://github.com/WilliamFly/devops-projects" class="project-card">
+      <h3>DevOps Projects</h3>
+      <p>Hands-on DevOps practice repo — server stats, log archiving, NGINX log analysis, CI/CD pipelines, Docker, systemd services, AWS EC2, and monitoring with Netdata.</p>
+      <div class="project-tags">
+        <span class="project-tag">AWS</span>
+        <span class="project-tag">Docker</span>
+        <span class="project-tag">NGINX</span>
+        <span class="project-tag">Bash</span>
+        <span class="project-tag">Systemd</span>
+        <span class="project-tag">Netdata</span>
+      </div>
+    </a>
+    <a href="https://github.com/WilliamFly/gh-deployment-workflow" class="project-card">
+      <h3>GitHub Actions Deployment</h3>
+      <p>Automated CI/CD pipeline using GitHub Actions to deploy a static site to GitHub Pages on every push to main — this very site.</p>
+      <div class="project-tags">
+        <span class="project-tag">GitHub Actions</span>
+        <span class="project-tag">CI/CD</span>
+        <span class="project-tag">GitHub Pages</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section id="contact">
+  <h2 class="section-title"><span>05.</span> Contact</h2>
+  <div class="contact-content">
+    <p>I'm currently open to remote DevOps and Cloud Engineer roles. Whether you have a question or just want to connect — my inbox is always open.</p>
+    <a href="mailto:contact@williammucha.com" class="btn btn-primary">Contact Me</a>
+    <div class="social-links">
+      <a href="https://linkedin.com/in/williamamucha">LinkedIn</a>
+      <a href="https://github.com/WilliamFly">GitHub</a>
+      <a href="mailto:contact@williammucha.com">Email</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Designed & built by William Mucha</p>
+</footer>
+
+<script>
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const PARTICLE_COUNT = 60;
+const CONNECTION_DISTANCE = 150;
+const PARTICLE_COLOR = '0, 180, 216';
+
+const particles = Array.from({ length: PARTICLE_COUNT }, () => ({
+  x: Math.random() * canvas.width,
+  y: Math.random() * canvas.height,
+  vx: (Math.random() - 0.5) * 0.4,
+  vy: (Math.random() - 0.5) * 0.4,
+  radius: Math.random() * 2 + 1
+}));
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${PARTICLE_COLOR}, 0.6)`;
+    ctx.fill();
+    for (let j = i + 1; j < particles.length; j++) {
+      const q = particles[j];
+      const dx = p.x - q.x;
+      const dy = p.y - q.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < CONNECTION_DISTANCE) {
+        const opacity = (1 - dist / CONNECTION_DISTANCE) * 0.3;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(q.x, q.y);
+        ctx.strokeStyle = `rgba(${PARTICLE_COLOR}, ${opacity})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
 </body>
 </html>
