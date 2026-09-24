@@ -114,36 +114,46 @@
   .section-title .idx { color: var(--dim); font-weight: 400; }
 
   /* ---------- Hero ---------- */
-  .hero { padding: 3.5rem 0 3rem; }
-  .boot {
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-    color: var(--dim);
-    line-height: 1.85;
-    margin-bottom: 2.5rem;
-    min-height: 9.5rem;
+  .hero { padding: 6.5rem 0 4rem; text-align: center; position: relative; }
+  .hero::before {
+    content: ''; position: absolute; z-index: -1; pointer-events: none;
+    inset: 0 0 3rem;
+    background: radial-gradient(ellipse 60% 60% at 50% 42%, rgba(10,12,14,0.8), rgba(10,12,14,0) 100%);
   }
-  .boot .ok { color: var(--green); }
-  .boot .cursor {
-    display: inline-block; width: 7px; height: 13px;
-    background: var(--green); vertical-align: text-bottom;
-    animation: blink 1s step-end infinite;
+
+  /* ---------- Background: scrolling network output ---------- */
+  .stream {
+    position: fixed; inset: 0; z-index: -1;
+    display: flex; justify-content: center; gap: 2.5rem;
+    overflow: hidden; pointer-events: none; user-select: none;
+    opacity: 0.5;
+    -webkit-mask-image: radial-gradient(ellipse 55% 80% at 50% 38%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.2) 35%, #000 100%);
+    mask-image: radial-gradient(ellipse 55% 80% at 50% 38%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.2) 35%, #000 100%);
   }
-  @keyframes blink { 50% { opacity: 0; } }
+  .stream-col { flex: 0 0 330px; overflow: hidden; }
+  .stream-inner {
+    font-family: var(--font-mono); font-size: 0.68rem; line-height: 1.55;
+    white-space: pre; will-change: transform;
+    animation: stream-scroll linear infinite;
+  }
+  .stream-inner .c { color: rgba(127,224,184,0.6); }
+  .stream-inner .o { color: rgba(124,141,135,0.55); }
+  .stream-inner .g { color: rgba(127,224,184,0.45); }
+  @keyframes stream-scroll { from { transform: translateY(0); } to { transform: translateY(-33.3333%); } }
   h1.headline {
     font-family: var(--font-mono);
-    font-size: clamp(1.7rem, 4.2vw, 2.5rem);
+    font-size: clamp(1.75rem, 4.6vw, 2.75rem);
     font-weight: 700;
-    line-height: 1.28;
+    line-height: 1.25;
     letter-spacing: -0.01em;
     color: var(--text);
-    max-width: 640px;
-    margin-bottom: 1.4rem;
+    max-width: 780px;
+    margin: 0 auto 1.5rem;
     text-wrap: balance;
   }
   h1.headline .accent { color: var(--green); }
-  .hero-sub { color: var(--muted); max-width: 560px; font-size: 0.98rem; margin-bottom: 2.2rem; }
-  .btn-row { display: flex; gap: 0.9rem; flex-wrap: wrap; }
+  .hero-sub { color: var(--muted); max-width: 600px; margin: 0 auto 2.4rem; font-size: 1rem; text-wrap: pretty; }
+  .btn-row { display: flex; gap: 0.9rem; flex-wrap: wrap; justify-content: center; }
   .btn {
     font-family: var(--font-mono);
     font-size: 0.82rem;
@@ -159,6 +169,7 @@
   .btn-ghost:hover { border-color: var(--muted); color: var(--text); }
 
   .stat-strip {
+    background: rgba(10,12,14,0.72);
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     border: 1px solid var(--border-dim);
@@ -166,7 +177,7 @@
     overflow: hidden;
     margin-top: 2.75rem;
   }
-  .stat { padding: 1.1rem 1.3rem; border-right: 1px solid var(--border-dim); }
+  .stat { padding: 1.1rem 1.3rem; border-right: 1px solid var(--border-dim); text-align: center; }
   .stat:last-child { border-right: none; }
   .stat-num { font-family: var(--font-mono); font-size: 1.35rem; font-weight: 700; color: var(--green); }
   .stat-label { font-size: 0.74rem; color: var(--dim); margin-top: 0.2rem; font-family: var(--font-mono); line-height: 1.45; }
@@ -227,10 +238,10 @@
     border: 1px solid var(--border-dim);
     border-radius: 6px;
     padding: 1.4rem 1.5rem;
-    background: var(--surface);
+    background: rgba(12,15,17,0.82);
     transition: border-color 0.15s, background 0.15s;
   }
-  .proj-card:hover { border-color: rgba(127,224,184,0.28); background: var(--surface-2); }
+  .proj-card:hover { border-color: rgba(127,224,184,0.28); background: rgba(18,22,25,0.88); }
   .proj-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.55rem; flex-wrap: wrap; }
   .proj-name { font-family: var(--font-mono); font-size: 0.95rem; font-weight: 600; color: var(--text); }
   .proj-status { font-family: var(--font-mono); font-size: 0.68rem; padding: 0.15rem 0.55rem; border-radius: 3px; white-space: nowrap; }
@@ -282,7 +293,8 @@
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .reveal { opacity: 1; transform: none; transition: none; }
-    .status-pill .dot, .boot .cursor { animation: none; }
+    .status-pill .dot { animation: none; }
+    .stream-inner { animation: none; }
   }
 
   @media (max-width: 420px) {
@@ -304,7 +316,8 @@
     .nav-links a { display: block; padding: 0.8rem 0; font-size: 0.85rem; border-bottom: 1px solid var(--border-dim); }
     .nav-links li:last-child a { border-bottom: none; }
     main { padding: 0 1.1rem; }
-    .boot { font-size: 0.72rem; white-space: nowrap; }
+    .hero { padding: 4rem 0 3rem; }
+    .stream { opacity: 0.3; -webkit-mask-image: none; mask-image: none; }
     section { padding: 3rem 0; }
     .stat-strip { grid-template-columns: 1fr 1fr; }
     .stat { border-bottom: 1px solid var(--border-dim); }
@@ -321,6 +334,7 @@
 <body>
 
 <div class="bg-grid"></div>
+<div class="stream" id="stream" aria-hidden="true"></div>
 
 <nav>
   <div class="nav-left">
@@ -340,7 +354,6 @@
 <main>
 
   <div class="hero">
-    <div class="boot" id="boot"></div>
     <h1 class="headline">DevOps engineer who hardens the <span class="accent">box</span> before shipping to it.</h1>
     <p class="hero-sub">4+ years running production cloud infrastructure, now going deeper into server hardening, self-hosted networks, and secure CI/CD. Terraform, Ansible, Docker, AWS, and increasingly, things that don't touch AWS at all.</p>
     <div class="btn-row">
@@ -597,58 +610,71 @@
 </footer>
 
 <script>
-// ---------- Boot sequence ----------
-const bootLines = [
-  { text: '[ 0.001782 ] booting williammucha.com' },
-  { text: '[ 0.041203 ] mounting /experience ........ ', ok: 'OK' },
-  { text: '[ 0.089511 ] mounting /projects .......... ', ok: 'OK' },
-  { text: '[ 0.132870 ] tor relay supremenode1 ....... ', ok: 'UP' },
-  { text: '[ 0.201044 ] status: ', ok: 'OPEN TO REMOTE ROLES' },
-];
-const boot = document.getElementById('boot');
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// ---------- Background: decorative network output ----------
+// Generic, made-up output using documentation IP ranges. Not live data.
+(function buildStream() {
+  const el = document.getElementById('stream');
+  const rnd = n => Math.floor(Math.random() * n);
+  const pick = a => a[rnd(a.length)];
+  const docIP = () => pick(['192.0.2', '198.51.100', '203.0.113']) + '.' + (1 + rnd(253));
+  const lanIP = () => '10.0.' + rnd(4) + '.' + (2 + rnd(250));
+  const b64 = n => Array.from({ length: n }, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'[rnd(64)]).join('');
+  const clock = () => '14:' + String(rnd(60)).padStart(2, '0') + ':' + String(rnd(60)).padStart(2, '0') + '.' + String(rnd(1e6)).padStart(6, '0');
+  const c = s => ({ k: 'c', s: '$ ' + s });
+  const o = s => ({ k: 'o', s });
+  const g = s => ({ k: 'g', s });
 
-function renderBootLine(entry, animate) {
-  return new Promise(resolve => {
-    const line = document.createElement('div');
-    boot.appendChild(line);
-    const base = entry.text;
-    const ok = entry.ok || '';
-    if (!animate) {
-      line.innerHTML = base + (ok ? '<span class="ok">' + ok + '</span>' : '');
-      resolve();
-      return;
-    }
-    const total = base.length + ok.length;
-    let i = 0;
-    const tick = () => {
-      i++;
-      if (i <= base.length) {
-        line.textContent = base.slice(0, i);
-      } else {
-        line.innerHTML = base + '<span class="ok">' + ok.slice(0, i - base.length) + '</span>';
-      }
-      if (i < total) setTimeout(tick, 6);
-      else resolve();
-    };
-    tick();
-  });
-}
+  const blocks = [
+    () => [g('[ 0.001782 ] booting williammucha.com'), g('[ 0.041203 ] mounting /experience ........ OK'),
+           g('[ 0.089511 ] mounting /projects .......... OK'), g('[ 0.132870 ] tor relay supremenode1 ....... UP'),
+           g('[ 0.201044 ] status: OPEN TO REMOTE ROLES')],
+    () => { const ip = lanIP(); return [c('nmap -sV -sC ' + ip), o('Starting Nmap 7.99 ( https://nmap.org )'),
+           o('Nmap scan report for host-' + rnd(90) + '.lab (' + ip + ')'), o('PORT    STATE SERVICE VERSION'),
+           o('22/tcp  open  ssh     OpenSSH 9.6p1 Ubuntu'), o('80/tcp  open  http    nginx 1.24.0'),
+           o('443/tcp open  ssl/http nginx 1.24.0'), o('Nmap done: 1 IP address (1 host up)')]; },
+    () => [c('ss -tulpn'), o('Netid State  Recv-Q Send-Q Local Address:Port'), o('tcp   LISTEN 0      4096   0.0.0.0:22'),
+           o('tcp   LISTEN 0      4096   0.0.0.0:443'), o('tcp   LISTEN 0      4096   127.0.0.1:3000'),
+           o('udp   UNCONN 0      0      0.0.0.0:51820')],
+    () => [c('dig +short A example.com'), o(docIP()), c('dig +short NS example.com'), o('a.iana-servers.net.'), o('b.iana-servers.net.')],
+    () => { const ip = docIP(); const h = []; for (let i = 1; i <= 6; i++) h.push(o(String(i).padStart(2, ' ') + '  ' + (i === 6 ? ip : docIP()) + '  ' + (i * 3 + rnd(9)) + '.' + rnd(10) + ' ms'));
+            return [c('traceroute -n ' + ip), o('traceroute to ' + ip + ', 30 hops max')].concat(h); },
+    () => { const l = [c("sudo tcpdump -ni eth0 'tcp port 443'")]; for (let i = 0; i < 5; i++) l.push(o(clock() + ' IP ' + docIP() + '.' + (40000 + rnd(20000)) + ' > ' + lanIP() + '.443: Flags [' + pick(['S', 'S.', '.', 'P.']) + '], length ' + rnd(1400))); return l; },
+    () => [c('sudo wg show wg0'), o('interface: wg0'), o('  public key: ' + b64(43) + '='), o('  listening port: 51820'),
+           o('peer: ' + b64(43) + '='), o('  endpoint: ' + docIP() + ':51820'), o('  allowed ips: 10.66.0.' + (2 + rnd(20)) + '/32'),
+           o('  latest handshake: ' + (1 + rnd(90)) + ' seconds ago'), o('  transfer: ' + (1 + rnd(9)) + '.' + rnd(99) + ' MiB received, ' + (1 + rnd(20)) + '.' + rnd(99) + ' MiB sent')],
+    () => [c('sudo fail2ban-client status sshd'), o('Status for the jail: sshd'), o('|- Filter'), o('|  |- Currently failed: ' + rnd(6)),
+           o("|  `- Total failed:     " + (200 + rnd(1800))), o('`- Actions'), o('   |- Currently banned: ' + (2 + rnd(9))), o('   `- Banned IP list:   ' + docIP() + ' ' + docIP())],
+    () => { const ip = docIP(); const l = [c('ping -c 3 ' + ip)]; for (let i = 0; i < 3; i++) l.push(o('64 bytes from ' + ip + ': icmp_seq=' + (i + 1) + ' ttl=57 time=' + (8 + rnd(30)) + '.' + rnd(10) + ' ms')); return l; },
+    () => [c('curl -sI https://example.com | head -4'), o('HTTP/2 200'), o('server: nginx'), o('strict-transport-security: max-age=63072000'), o('content-type: text/html; charset=utf-8')],
+    () => [c('sudo ufw status'), o('Status: active'), o('To                Action   From'), o('22/tcp            ALLOW    Anywhere'), o('443/tcp           ALLOW    Anywhere'), o('51820/udp         ALLOW    Anywhere')],
+    () => [c('ip -br addr'), o('lo      UNKNOWN  127.0.0.1/8'), o('eth0    UP       ' + lanIP() + '/24'), o('wg0     UNKNOWN  10.66.0.1/24')],
+    () => [c('openssl s_client -connect example.com:443'), o('Protocol  : TLSv1.3'), o('Cipher    : TLS_AES_256_GCM_SHA384'), o('Verification: OK')],
+    () => [c('journalctl -u tor@default -n 2'), o('Tor[' + (400 + rnd(900)) + ']: Self-testing indicates your ORPort is reachable from the outside. Excellent.'),
+           o('Tor[' + (400 + rnd(900)) + ']: Performing bandwidth self-test...done.')],
+  ];
 
-async function runBoot() {
-  if (reduceMotion) {
-    for (const l of bootLines) await renderBootLine(l, false);
-    return;
+  function shuffled() { const a = blocks.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+  const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  function columnHTML() {
+    let html = '';
+    for (const mk of shuffled()) { html += mk().map(l => '<span class="' + l.k + '">' + esc(l.s) + '</span>').join('\n') + '\n\n'; }
+    return html;
   }
-  for (const l of bootLines) {
-    await renderBootLine(l, true);
-    await new Promise(r => setTimeout(r, 90));
+
+  const durations = [110, 150, 95, 130, 170];
+  for (let i = 0; i < 5; i++) {
+    const col = document.createElement('div');
+    col.className = 'stream-col';
+    const inner = document.createElement('div');
+    inner.className = 'stream-inner';
+    const one = columnHTML();
+    inner.innerHTML = one + one + one;
+    inner.style.animationDuration = durations[i] + 's';
+    inner.style.animationDelay = '-' + rnd(durations[i]) + 's';
+    col.appendChild(inner);
+    el.appendChild(col);
   }
-  const cursorLine = document.createElement('div');
-  cursorLine.innerHTML = '<span class="ok">$</span> <span class="cursor"></span>';
-  boot.appendChild(cursorLine);
-}
-runBoot();
+})();
 
 // ---------- Mobile nav ----------
 const navEl = document.querySelector('nav');
